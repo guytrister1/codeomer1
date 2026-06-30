@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Omer | ערוץ יוטיוב</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#060a10;
+    --bg-deep:#0a1320;
+    --bg-panel:#0d1b2a;
+    --line:#16293d;
+    --cyan:#3ee8ff;
+    --cyan-soft:#4cc9f0;
+    --blue:#2a6f97;
+    --blue-deep:#0a3a5c;
+    --ink:#eaf6fb;
+    --muted:#7d9bb0;
+    --glow: 0 0 18px rgba(62,232,255,.55);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-void);
+    color:var(--ink);
+    font-family:'Rubik',sans-serif;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ===== background grid + circuit texture ===== */
+  .bg-fixed{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 900px 600px at 80% -10%, rgba(62,232,255,.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 10% 110%, rgba(42,111,151,.14), transparent 60%),
+      linear-gradient(180deg, var(--bg-void), var(--bg-deep) 40%, var(--bg-void));
+  }
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.18;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 20%, black 30%, transparent 75%);
+  }
+
+  ::selection{ background:var(--cyan); color:#031018; }
+
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px; position:relative; z-index:2;}
+
+  /* ===== nav ===== */
+  header{
+    position:fixed; top:0; right:0; left:0; z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(6,10,16,.55);
+    border-bottom:1px solid rgba(62,232,255,.08);
+  }
+  nav.wrap{ display:flex; align-items:center; justify-content:space-between; height:74px; padding-top:0; padding-bottom:0;}
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand img{ height:42px; width:42px; object-fit:cover; border-radius:50%; box-shadow:var(--glow); border:1px solid rgba(62,232,255,.4);}
+  .logo-mark{
+    height:42px; width:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, rgba(62,232,255,.35), var(--bg-panel) 70%);
+    border:1px solid rgba(62,232,255,.5); box-shadow:var(--glow); color:var(--cyan); font-size:20px;
+  }
+  .logo-mark.small{ height:30px; width:30px; font-size:14px; }
+  .hero-mark{
+    font-size:120px; color:var(--cyan); text-shadow:0 0 30px rgba(62,232,255,.7), 0 0 70px rgba(62,232,255,.3);
+  }
+  .brand-text{font-family:'Orbitron',sans-serif; font-weight:700; font-size:18px; letter-spacing:.5px;}
+  .brand-text span{color:var(--cyan);}
+  .navlinks{display:flex; gap:34px; font-size:15px; color:var(--muted);}
+  .navlinks a{position:relative; padding:6px 0; transition:color .25s;}
+  .navlinks a:hover{color:var(--ink);}
+  .navlinks a::after{
+    content:''; position:absolute; right:0; bottom:0; height:1px; width:0;
+    background:var(--cyan); transition:width .3s; box-shadow:var(--glow);
+  }
+  .navlinks a:hover::after{width:100%;}
+  .nav-cta{
+    border:1px solid var(--cyan-soft); color:var(--cyan); padding:9px 20px;
+    border-radius:3px; font-size:14px; letter-spacing:.3px; transition:all .25s;
+    font-family:'Orbitron',sans-serif; font-weight:500;
+  }
+  .nav-cta:hover{background:var(--cyan); color:#031018; box-shadow:var(--glow);}
+  .burger{display:none;}
+
+  /* ===== hero ===== */
+  .hero{
+    position:relative; min-height:100svh; display:flex; align-items:center;
+    padding-top:74px; overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; width:100%;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'Orbitron',sans-serif; font-size:12px; letter-spacing:2.5px;
+    color:var(--cyan); margin-bottom:22px; text-transform:uppercase;
+  }
+  .eyebrow::before{
+    content:''; width:26px; height:1px; background:var(--cyan); box-shadow:var(--glow);
+  }
+  .hero h1{
+    font-family:'Orbitron',sans-serif; font-weight:900;
+    font-size:clamp(40px, 6vw, 74px); line-height:1.05; letter-spacing:1px;
+    margin-bottom:22px;
+  }
+  .hero h1 .glow-word{
+    color:var(--cyan);
+    text-shadow:0 0 24px rgba(62,232,255,.6), 0 0 60px rgba(62,232,255,.25);
+  }
+  .hero p.lead{
+    color:var(--muted); font-size:18px; line-height:1.85; max-width:520px; margin-bottom:36px;
+  }
+  .hero-ctas{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn-primary{
+    font-family:'Orbitron',sans-serif; font-weight:700; font-size:14px; letter-spacing:.5px;
+    background:linear-gradient(135deg, var(--cyan), var(--blue));
+    color:#031018; padding:16px 30px; border-radius:3px; display:inline-flex; align-items:center; gap:10px;
+    box-shadow:0 0 30px rgba(62,232,255,.35); transition:transform .25s, box-shadow .25s;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 0 40px rgba(62,232,255,.55);}
+  .btn-ghost{
+    font-family:'Orbitron',sans-serif; font-weight:500; font-size:14px;
+    border:1px solid var(--line); color:var(--ink); padding:16px 28px; border-radius:3px;
+    transition:border-color .25s, background .25s;
+  }
+  .btn-ghost:hover{ border-color:var(--cyan-soft); background:rgba(62,232,255,.06); }
+
+  .hero-stats{ display:flex; gap:34px; margin-top:48px; }
+  .stat b{ font-family:'Orbitron',sans-serif; display:block; font-size:26px; color:var(--ink); }
+  .stat span{ font-size:13px; color:var(--muted); }
+
+  /* hero visual: hexagon framed character */
+  .hero-visual{ position:relative; display:flex; align-items:center; justify-content:center; }
+  .hex-frame{
+    position:relative; width:min(420px, 90%); aspect-ratio:1/1.05;
+    clip-path:polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+    background:radial-gradient(circle at 50% 30%, rgba(62,232,255,.18), rgba(10,19,32,.4) 70%);
+    border:1px solid rgba(62,232,255,.25);
+    display:flex; align-items:center; justify-content:center;
+    animation:float 6s ease-in-out infinite;
+  }
+  .hex-frame img{ width:88%; height:88%; object-fit:cover; clip-path:inherit; filter:saturate(1.15) contrast(1.05); }
+  .hex-ring{
+    position:absolute; inset:-22px; border:1px dashed rgba(62,232,255,.25);
+    clip-path:polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+    animation:spin 22s linear infinite;
+  }
+  @keyframes float{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+  @keyframes spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+  .scroll-cue{
+    position:absolute; bottom:34px; right:50%; transform:translateX(50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    color:var(--muted); font-size:11px; letter-spacing:2px; font-family:'Orbitron',sans-serif;
+  }
+  .scroll-cue .line{ width:1px; height:34px; background:linear-gradient(var(--cyan), transparent); animation:pulse-line 1.8s ease-in-out infinite; }
+  @keyframes pulse-line{ 0%,100%{opacity:.3;} 50%{opacity:1;} }
+
+  /* ===== section shared ===== */
+  section{ position:relative; z-index:2; padding:120px 0; }
+  .section-head{ margin-bottom:60px; max-width:640px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{
+    font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(30px,4vw,44px);
+    line-height:1.2; margin-bottom:18px;
+  }
+  .section-head p{ color:var(--muted); font-size:16px; line-height:1.8; }
+  .divider{
+    height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent); margin:0 0 0;
+  }
+
+  /* ===== about / pillars ===== */
+  .about{ background:linear-gradient(180deg, transparent, rgba(13,27,42,.4), transparent); }
+  .pillars{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .pillar{
+    background:rgba(13,27,42,.55); border:1px solid var(--line); border-radius:6px; padding:32px 26px;
+    position:relative; overflow:hidden; transition:transform .3s, border-color .3s;
+  }
+  .pillar::before{
+    content:''; position:absolute; top:0; right:0; width:60px; height:60px;
+    background:radial-gradient(circle at top right, rgba(62,232,255,.18), transparent 70%);
+  }
+  .pillar:hover{ transform:translateY(-6px); border-color:rgba(62,232,255,.35); }
+  .pillar .num{ font-family:'Orbitron',sans-serif; color:var(--cyan); font-size:13px; letter-spacing:2px; margin-bottom:18px; display:block;}
+  .pillar h3{ font-family:'Orbitron',sans-serif; font-size:19px; margin-bottom:12px; }
+  .pillar p{ color:var(--muted); font-size:14.5px; line-height:1.75; }
+
+  /* ===== videos ===== */
+  .videos-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .video-card{
+    border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--bg-panel);
+    transition:transform .3s, box-shadow .3s, border-color .3s; cursor:pointer;
+  }
+  .video-card:hover{ transform:translateY(-6px); border-color:rgba(62,232,255,.4); box-shadow:0 18px 40px -16px rgba(62,232,255,.25); }
+  .thumb{
+    aspect-ratio:16/9; position:relative; overflow:hidden;
+    background:linear-gradient(135deg, var(--blue-deep), var(--bg-panel));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .thumb::after{
+    content:''; position:absolute; inset:0;
+    background:repeating-linear-gradient(115deg, transparent 0 18px, rgba(62,232,255,.05) 18px 19px);
+  }
+  .play-dot{
+    width:54px; height:54px; border-radius:50%; border:1px solid rgba(62,232,255,.5);
+    display:flex; align-items:center; justify-content:center; color:var(--cyan);
+    background:rgba(6,10,16,.5); transition:all .3s; z-index:2;
+  }
+  .video-card:hover .play-dot{ background:var(--cyan); color:#031018; box-shadow:var(--glow); }
+  .video-meta{ padding:18px 20px 22px; }
+  .video-meta .tag{ font-family:'Orbitron',sans-serif; font-size:11px; color:var(--cyan); letter-spacing:1.5px; margin-bottom:8px; display:block;}
+  .video-meta h4{ font-size:16.5px; margin-bottom:8px; line-height:1.4; }
+  .video-meta .sub{ color:var(--muted); font-size:13px; }
+
+  /* ===== gallery (logos) ===== */
+  .gallery{ display:flex; justify-content:center; gap:50px; flex-wrap:wrap; align-items:center; }
+  .gallery img{
+    max-width:300px; width:100%; border-radius:8px; border:1px solid var(--line);
+    filter:saturate(1.1); transition:transform .35s, box-shadow .35s;
+  }
+  .gallery img:hover{ transform:scale(1.03); box-shadow:0 0 36px rgba(62,232,255,.3); }
+
+  /* ===== join cta ===== */
+  .join{
+    text-align:center; border:1px solid var(--line); border-radius:10px;
+    padding:80px 40px; position:relative; overflow:hidden;
+    background:radial-gradient(ellipse at 50% 0%, rgba(62,232,255,.10), transparent 65%);
+  }
+  .join h2{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(28px,4vw,42px); margin-bottom:18px; }
+  .join p{ color:var(--muted); max-width:520px; margin:0 auto 36px; line-height:1.8; }
+
+  /* ===== footer ===== */
+  footer{ border-top:1px solid var(--line); padding:50px 0; position:relative; z-index:2; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .footer-brand{ display:flex; align-items:center; gap:10px; font-family:'Orbitron',sans-serif; font-size:15px; }
+  .footer-brand img{ height:30px; width:30px; border-radius:50%; }
+  .social{ display:flex; gap:18px; }
+  .social a{
+    width:38px; height:38px; border:1px solid var(--line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:var(--muted);
+    transition:all .25s; font-size:15px;
+  }
+  .social a:hover{ color:var(--cyan); border-color:var(--cyan-soft); box-shadow:var(--glow); }
+  .footer-copy{ color:var(--muted); font-size:13px; }
+
+  /* ===== responsive ===== */
+  @media (max-width:880px){
+    .navlinks{ display:none; }
+    .hero-grid{ grid-template-columns:1fr; text-align:center; }
+    .eyebrow{ margin-inline:auto; }
+    .hero p.lead{ margin-inline:auto; }
+    .hero-ctas{ justify-content:center; }
+    .hero-stats{ justify-content:center; }
+    .hero-visual{ order:-1; }
+    .pillars, .videos-grid{ grid-template-columns:1fr; }
+    .footer-inner{ flex-direction:column; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-fixed"></div>
+<div class="bg-grid"></div>
+
+<header>
+  <nav class="wrap">
+    <div class="brand">
+      <div class="logo-mark"><span>⌬</span></div>
+      <div class="brand-text">CODE <span>OMER</span></div>
+    </div>
+    <div class="navlinks">
+      <a href="#about">אודות</a>
+      <a href="#videos">סרטונים</a>
+      <a href="#join">הצטרפות</a>
+    </div>
+    <a class="nav-cta" href="#join">תעקבו אחרי</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">ערוץ יוטיוב • טכנולוגיה ופיתוח</div>
+        <h1>בונים עולמות דיגיטליים <br> ב<span class="glow-word">Code Omer</span></h1>
+        <p class="lead">
+          סרטוני קוד, משחקים, ופרויקטים שנבנים מאפס בשידור חי. מ-HTML פשוט ועד עולמות ב-Roblox —
+          כל שורת קוד היא עוד צעד בדרך.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="#videos">
+            ▶ צפו בסרטונים האחרונים
+          </a>
+          <a class="btn-ghost" href="#join">הצטרפו לערוץ</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b>50+</b><span>פרויקטים שפותחו</span></div>
+          <div class="stat"><b>100%</b><span>קוד פתוח ושיתוף</span></div>
+          <div class="stat"><b>∞</b><span>רעיונות בדרך</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hex-ring"></div>
+        <div class="hex-frame">
+          <div class="hero-mark">⌬</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span>גלילה</span><div class="line"></div></div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">מי אנחנו</div>
+        <h2>פיתוח, יצירה, וקצת קסם דיגיטלי</h2>
+        <p>הערוץ נולד מתוך אהבה לקוד וליצירה. כל פרויקט הוא הזדמנות ללמוד, לבנות, ולשתף — בעברית, בשקיפות מלאה, וללא צעדים מדולגים.</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <span class="num">01</span>
+          <h3>פיתוח אתרים</h3>
+          <p>אפליקציות ווב בקובץ אחד — HTML, CSS ו-JS, עם חיבור ל-Firebase ועיצובים שלא נראים כמו תבנית.</p>
+        </div>
+        <div class="pillar">
+          <span class="num">02</span>
+          <h3>משחקי דפדפן</h3>
+          <p>ממשחקי קלפים ועד זירות קרב — לוגיקה, אנימציה וסאונד, הכל נבנה מאפס מול המצלמה.</p>
+        </div>
+        <div class="pillar">
+          <span class="num">03</span>
+          <h3>עולמות Roblox</h3>
+          <p>סקריפטים ב-Lua, מנגנוני משחק, ועולמות אינטראקטיביים שבנויים שלב אחר שלב.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="videos">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">תוכן אחרון</div>
+        <h2>סרטונים נבחרים</h2>
+        <p>מקום לעדכן עם הסרטונים האמיתיים שלך — כותרות, תמונות ממוזערות וקישורים.</p>
+      </div>
+      <div class="videos-grid">
+        <div class="video-card">
+          <div class="thumb"><div class="play-dot">▶</div></div>
+          <div class="video-meta">
+            <span class="tag">פיתוח ווב</span>
+            <h4>בונה משחק קלפים מאפס בעברית</h4>
+            <span class="sub">פרק חדש • HTML / JS</span>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="thumb"><div class="play-dot">▶</div></div>
+          <div class="video-meta">
+            <span class="tag">Roblox</span>
+            <h4>בונים עולם אינטראקטיבי ב-Lua</h4>
+            <span class="sub">סדרה • סקריפטינג</span>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="thumb"><div class="play-dot">▶</div></div>
+          <div class="video-meta">
+            <span class="tag">Firebase</span>
+            <h4>בניית משחק מולטיפלייר בזמן אמת</h4>
+            <span class="sub">מדריך מלא</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="join">
+    <div class="wrap">
+      <div class="join">
+        <div class="eyebrow" style="justify-content:center;">בואו נתחיל</div>
+        <h2>מוכנים לבנות יחד?</h2>
+        <p>הצטרפו לקהילה, עקבו אחרי הפרויקטים החדשים, ותהיו חלק מהמסע מהשורה הראשונה של הקוד.</p>
+        <a class="btn-primary" href="#">🔔 הרשמה לערוץ</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <div class="logo-mark small">⌬</div>
+      CODE OMER
+    </div>
+    <div class="social">
+      <a href="#" title="YouTube">▶</a>
+      <a href="#" title="Discord">◆</a>
+      <a href="#" title="GitHub">⌥</a>
+    </div>
+    <div class="footer-copy">© 2026 Code Omer. כל הזכויות שמורות.</div>
+  </div>
+</footer>
+
+<script>
+  // reveal-on-scroll
+  const revealEls = document.querySelectorAll('.pillar, .video-card, .join');
+  revealEls.forEach(el => { el.style.opacity = 0; el.style.transform = 'translateY(24px)'; el.style.transition = 'opacity .7s ease, transform .7s ease'; });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  revealEls.forEach(el => io.observe(el));
+
+  // header shrink/blur intensify on scroll
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    header.style.background = window.scrollY > 40 ? 'rgba(6,10,16,.85)' : 'rgba(6,10,16,.55)';
+  });
+</script>
+
+</body>
+</html>
